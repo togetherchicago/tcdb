@@ -2,32 +2,73 @@
 
 {% block content %}
 
-<div class="text-center">
-  {% load staticfiles %}
-  <br>
-  <img src="{% static "tclogo.png" %}" alt="Together Chicago">
-  <br>
-</div>
-
-<form>
-  <div class="form-group">
-    <label for="exampleFormControlFile1">Example file input</label>
-    <input type="file" class="form-control-file" id="exampleFormControlFile1">
-  </div>
-</form>
-
-<div class="input-group date">
-    <input type="text" class="form-control" value="12-02-2012">
-    <div class="input-group-addon" id="datepicker">
-        <span class="glyphicon glyphicon-th"></span>
+    <!-- MASTHEAD IMAGE-->
+    <div class="text-center">
+      {% load staticfiles %}
+      <br>
+      <img src="{% static 'tclogo.png' %}" alt="Together Chicago">
+      <br>
     </div>
-</div>
 
+    <!-- DATASET TABS -->
+    <ul class="nav nav-tabs">
+      <li role="presentation" id="wr" {% if tab == "wr" %} class="active" {% endif %}><a href="#">Weekly Report</a></li>
+      <li role="presentation" id="glr" {% if tab == "glr" %} class="active" {% endif %}><a href="#">Grade Level Report</a></li>
+      <li role="presentation" id="dw" {% if tab == "dw" %} class="active" {% endif %}><a href="#">Data Wall</a></li>
+    </ul>
 
-<div class="alert alert-warning" role="alert">
-  A simple warning alert-check it out!
-</div>
+    <br>
 
-<br>
+    <!-- INPUT FORM -->
+    <form action="/" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label id="input-label" data-trigger="hover" data-toggle="popover" title="Sample Date" data-content="Choose the date on which the provided data was sampled." for="formGroupExampleInput2">Dataset File</label>
+        <span class="glyphicon glyphicon-info-sign"></span>
+
+        <div class="input-group">
+          <span class="input-group-btn">
+            <label class="btn btn-default btn-file">
+                Browse <input type="file" name="dataset-file" style="display: none;">
+            </label>
+          </span>
+          <input type="text" class="form-control" name="dataset-file-name" placeholder="Select file...">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label id="input-label" data-trigger="hover" data-toggle="popover" title="Sample Date" data-content="Choose the date on which the provided data was sampled." for="formGroupExampleInput2">Sample Date</label>
+        <span class="glyphicon glyphicon-info-sign"></span>
+
+        <div class='input-group date' data-provide="datepicker">
+            <input type='text' class="form-control" name="dataset-date" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+      </div>
+
+        <input type="hidden" name="dataset-type" value="wr"/>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Add Dataset</button>
+      </div>
+    </form>
+
+    <!-- SUBMISSION RESULT -->
+    {% if message %}
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+              {{message}}
+            </div>
+        {% else %}
+            <div class="alert alert-success" role="alert">
+              {{message}}
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <br>
 
 {% endblock content %}
