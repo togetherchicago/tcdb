@@ -1,0 +1,33 @@
+{% extends "_import-base.html" %}
+
+{% block content %}
+
+<div class="text-center">
+  {% load staticfiles %}
+  <br>
+  <img src="{% static "tclogo.png" %}" alt="Together Chicago">
+  <br>
+</div>
+
+<form>
+  <div class="form-group">
+    <label for="exampleFormControlFile1">Example file input</label>
+    <input type="file" class="form-control-file" id="exampleFormControlFile1">
+  </div>
+</form>
+
+<div class="input-group date">
+    <input type="text" class="form-control" value="12-02-2012">
+    <div class="input-group-addon" id="datepicker">
+        <span class="glyphicon glyphicon-th"></span>
+    </div>
+</div>
+
+
+<div class="alert alert-warning" role="alert">
+  A simple warning alert-check it out!
+</div>
+
+<br>
+
+{% endblock content %}
