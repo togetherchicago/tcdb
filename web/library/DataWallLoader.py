@@ -1,47 +1,67 @@
+import csv
+
 from docker_django.apps.importer.models import DataWall
+from library.LoadResult import LoadResult
 
 
 class DataWallLoader:
 
-    def load(self, csv_data, date):
+    def __init__(self, csv_file):
+        col_count = self.columns_count(csv_file)
+        if col_count != 35:
+            raise ValueError("Expected 35 columns, but got " + str(col_count) + ".")
+        fields = ['col' + str(i) for i in range(1, 36)]
+        self.csv_data = csv.DictReader(open(csv_file), fields)
 
-        for row in csv_data:
-                DataWall.objects.create(student='blah',
-                                        grade_level=row["GL"],
-                                        slc=row["SLC"])
+    def columns_count(self, csv_file):
+        with open(csv_file, 'r') as f:
+            return len(next(csv.reader(f)))
 
-        # row.student = models.TextField()
-        # row.grade_level = models.PositiveSmallIntegerField()
-        # row.slc = models.TextField()
-        # row.id = models.TextField()
-        # row.race = models.TextField()
-        # row.gender = models.TextField()
-        # row.lunch = models.TextField()
-        # row.sped = models.TextField()
-        # row.ell = models.TextField()
-        # row.demoted = models.TextField()
-        # row.birthdate = models.DateField()
-        # row.parent = models.TextField()
-        # row.address = models.TextField()
-        # row.city = models.TextField()
-        # row.state = models.TextField()
-        # row.zip = models.TextField()
-        # row.parent_phone = models.TextField()
-        # row.on_track = models.TextField()
-        # row.credits = models.FloatField()
-        # row.weighted_gpa = models.FloatField()
-        # row.class_rank = models.SmallIntegerField()
-        # row.sl_hours = models.SmallIntegerField()
-        # row.nwea_rdg = models.SmallIntegerField()
-        # row.epas_comp = models.SmallIntegerField()
-        # row.last_points = models.SmallIntegerField()
-        # row.current_points = models.SmallIntegerField()
-        # row.slc_current_points = models.SmallIntegerField()
-        # row.trend = models.SmallIntegerField()
-        # row.aca = models.SmallIntegerField()
-        # row.slc_aca = models.SmallIntegerField()
-        # row.att = models.TextField()
-        # row.slc_att = models.TextField()
-        # row.beh = models.SmallIntegerField()
-        # row.coach = models.SmallIntegerField()
-        # row.action_plan_goal = models.SmallIntegerField()
+    def load(self, date):
+
+        result = LoadResult()
+
+        for row_number, row in enumerate(self.csv_data):
+            try:
+                DataWall.objects.create(student=row['col1'],
+                                        grade_level=row["col2"],
+                                        slc=row["col3"],
+                                        student_id=row['col4'],
+                                        race=row["col5"],
+                                        gender=row["col6"],
+                                        lunch=row["col7"],
+                                        sped=row["col8"],
+                                        ell=row["col9"],
+                                        demoted=row["col10"],
+                                        birthdate=row["col11"],
+                                        parent=row["col12"],
+                                        address=row["col13"],
+                                        city=row["col14"],
+                                        state=row["col15"],
+                                        zip=row["col16"],
+                                        parent_phone=row["col17"],
+                                        on_track=row["col18"],
+                                        credits=row["col19"],
+                                        weighted_gpa=row["col20"],
+                                        class_rank=row["col21"],
+                                        sl_hours=row["col22"],
+                                        nwea_rdg=row["col23"],
+                                        epas_comp=row["col24"],
+                                        last_points=row["col25"],
+                                        current_points=row["col26"],
+                                        slc_current_points=row["col27"],
+                                        trend=row["col28"],
+                                        aca=row["col29"],
+                                        slc_aca=row["col30"],
+                                        att=row["col31"],
+                                        slc_att=row["col32"],
+                                        beh=row["col33"],
+                                        coach=row["col34"],
+                                        action_plan_goal=row["col35"],
+                                        date_posted=date)
+                result.increment_success()
+
+            except ValueError as e:
+                result.increment_failure(row_number, str(e))
+
+        return result

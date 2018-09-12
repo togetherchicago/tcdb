@@ -6,8 +6,6 @@ from datetime import datetime
 
 from library.DataWallLoader import DataWallLoader
 
-redis = Redis(host='redis', port=6379)
-
 def importer(request):
 
     error = False
@@ -33,15 +31,19 @@ def importer(request):
         filename = fs.save(datasetFile.name, datasetFile)
         uploaded_file_url = fs.url(filename)
 
-        csv_data = csv.DictReader(open(uploaded_file_url))
+        try:
+            result = DataWallLoader(uploaded_file_url).load(datasetDateObj)
+            if result.succeeded():
+                error = False
+                message = "Success!"
+            else:
+                error = True
+                message = str(len(result.failed_rows)) + " rows reported errors. Loaded " + str(result.rows_succeeded) + " successfully."
 
-        # with open(uploaded_file_url, mode='r') as infile:
-        #     reader = csv.reader(infile)
-        #     mydict = dict(row for row in reader if row)
+        except ValueError as e:
+            error = True
+            message = "This is not a valid dataset: " + str(e)
 
-        DataWallLoader().load(csv_data, datasetDateObj)
         fs.delete(datasetFile.name)
-
-        message = "Success!"
 
     return render(request, 'import.html', {'message': message, 'error': error, 'tab': datasetType, 'date': datasetDate})
