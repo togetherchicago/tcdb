@@ -6,19 +6,21 @@ from library.LoadResult import LoadResult
 
 class DataWallLoader:
 
+    EXPECTED_COL_COUNT = 35
+
     def __init__(self, csv_file):
         col_count = self.columns_count(csv_file)
-        if col_count != 35:
-            raise ValueError("Expected 35 columns, but got " + str(col_count) + ".")
-        fields = ['col' + str(i) for i in range(1, 36)]
+        if col_count != DataWallLoader.EXPECTED_COL_COUNT:
+            raise ValueError("Expected " + str(DataWallLoader.EXPECTED_COL_COUNT) + " columns, but got " + str(col_count) + ".")
+        fields = ['col' + str(i) for i in range(1, DataWallLoader.EXPECTED_COL_COUNT + 1)]
         self.csv_data = csv.DictReader(open(csv_file), fields)
 
-    def columns_count(self, csv_file):
+    @staticmethod
+    def columns_count(csv_file):
         with open(csv_file, 'r') as f:
             return len(next(csv.reader(f)))
 
     def load(self, date):
-
         result = LoadResult()
 
         for row_number, row in enumerate(self.csv_data):
@@ -60,7 +62,6 @@ class DataWallLoader:
                                         action_plan_goal=row["col35"],
                                         date_posted=date)
                 result.increment_success()
-
             except ValueError as e:
                 result.increment_failure(row_number, str(e))
 

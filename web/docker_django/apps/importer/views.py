@@ -1,10 +1,11 @@
-from django.shortcuts import render
-from redis import Redis
-from django.core.files.storage import FileSystemStorage
-import csv
 from datetime import datetime
 
+from django.core.files.storage import FileSystemStorage
+from django.shortcuts import render
+
 from library.DataWallLoader import DataWallLoader
+from library.RosterLoader import RosterLoader
+
 
 def importer(request):
 
@@ -32,17 +33,21 @@ def importer(request):
         uploaded_file_url = fs.url(filename)
 
         try:
-            result = DataWallLoader(uploaded_file_url).load(datasetDateObj)
+            if datasetType == 'wr':
+                result = RosterLoader(uploaded_file_url).load(datasetDateObj)
+            elif datasetType == 'dw':
+                result = DataWallLoader(uploaded_file_url).load(datasetDateObj)
+
             if result.succeeded():
                 error = False
-                message = "Success!"
+                message = str(len(result.failed_rows)) + " records loaded successfully."
             else:
                 error = True
-                message = str(len(result.failed_rows)) + " rows reported errors. Loaded " + str(result.rows_succeeded) + " successfully."
+                message = str(len(result.failed_rows)) + " records failed. Loaded " + str(result.rows_succeeded) + " records successfully."
 
         except ValueError as e:
             error = True
-            message = "This is not a valid dataset: " + str(e)
+            message = "This is not a valid dataset: " + str(e) + " No data was loaded in the database."
 
         fs.delete(datasetFile.name)
 

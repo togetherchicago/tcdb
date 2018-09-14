@@ -11,7 +11,7 @@ class Roster(models.Model):
     cavg = models.IntegerField()
     teacher = models.TextField(blank=True, null=True)
     teacher_id = models.TextField(blank=True, null=True)
-    date_posted = models.DateField(auto_now=True)
+    date_posted = models.DateField()
 
 class DataWall(models.Model):
     student = models.TextField(blank=True, null=True)
@@ -49,4 +49,4 @@ class DataWall(models.Model):
     beh = models.TextField(blank=True, null=True)
     coach = models.TextField(blank=True, null=True)
     action_plan_goal = models.TextField(blank=True, null=True)
-    date_posted = models.DateField(auto_now=True)
+    date_posted = models.DateField()
