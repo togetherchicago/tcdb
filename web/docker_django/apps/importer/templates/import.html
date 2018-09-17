@@ -1,0 +1,78 @@
+{% extends "_import-base.html" %}
+
+{% block content %}
+
+    <!-- MASTHEAD IMAGE-->
+    <div class="text-center">
+      {% load staticfiles %}
+      <br>
+        <a href="http://www.togetherchicago.com">
+            <img src="{% static 'tclogo.png' %}" alt="Together Chicago">
+        </a>
+      <br>
+    </div>
+
+    <!-- DATASET TABS -->
+    <ul class="nav nav-tabs">
+      <li role="presentation" id="wr" {% if tab == "wr" %} class="active" {% endif %}><a href="#">Weekly Roster</a></li>
+      <!--<li role="presentation" id="glr" {% if tab == "glr" %} class="active" {% endif %}><a href="#">Grade Level Report</a></li>-->
+      <li role="presentation" id="dw" {% if tab == "dw" %} class="active" {% endif %}><a href="#">Data Wall</a></li>
+    </ul>
+
+    <br>
+
+    <p id="dataset-descriptor"/>
+    <hr/>
+
+
+    <!-- INPUT FORM -->
+    <form action="/" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label id="dataset-input-label" data-trigger="hover" data-toggle="popover" title="Dataset" data-content="Choose a comma-separated values file whose data should be loaded into the database.">Dataset</label>
+
+        <div class="input-group">
+          <span class="input-group-btn">
+            <label class="btn btn-default btn-file">
+                Browse <input type="file" name="dataset-file" style="display: none;">
+            </label>
+          </span>
+          <input type="text" class="form-control" name="dataset-file-name" placeholder="Select file...">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label id="datastamp-input-label" data-trigger="hover" data-toggle="popover" title="Sample Date" data-content="Choose the date on which the provided data was collected.">Sample Date</label>
+
+        <div class='input-group date' data-provide="datepicker">
+            <input type='text' class="form-control" name="dataset-date" value="{{date}}"/>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+      </div>
+
+        <input type="hidden" name="dataset-type" value="wr"/>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Add Dataset</button>
+      </div>
+    </form>
+
+    <!-- SUBMISSION RESULT -->
+    {% if message %}
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+              {{message}}
+            </div>
+        {% else %}
+            <div class="alert alert-success" role="alert">
+              {{message}}
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <br>
+
+{% endblock content %}

@@ -9,6 +9,8 @@ web:
   volumes:
     - /usr/src/app
     - /usr/src/app/static
+#    - ./web:/usr/src/app
+#    - ./web/static:/usr/src/app/static
   env_file: .env
   environment:
     DEBUG: 'true'
@@ -28,7 +30,7 @@ nginx:
 
 postgres:
   restart: always
-  image: postgres:latest
+  image: muccg/postgres-ssl:9.6
   ports:
     - "5432:5432"
   volumes:
