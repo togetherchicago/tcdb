@@ -7,8 +7,10 @@ web:
     - postgres:postgres
     - redis:redis
   volumes:
-    - ./web:/usr/src/app
-    - ./web/static:/usr/src/app/static
+    - /usr/src/app
+    - /usr/src/app/static
+#    - ./web:/usr/src/app
+#    - ./web/static:/usr/src/app/static
   env_file: .env
   environment:
     DEBUG: 'true'

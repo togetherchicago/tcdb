@@ -38,7 +38,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # apps
-    'docker_django.apps.todo',
     'docker_django.apps.importer',
 )
 
