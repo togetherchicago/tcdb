@@ -40,7 +40,7 @@ def importer(request):
 
             if result.succeeded():
                 error = False
-                message = str(len(result.failed_rows)) + " records loaded successfully."
+                message = str(result.rows_succeeded) + " records loaded successfully."
             else:
                 error = True
                 message = str(len(result.failed_rows)) + " records failed. Loaded " + str(result.rows_succeeded) + " records successfully."
