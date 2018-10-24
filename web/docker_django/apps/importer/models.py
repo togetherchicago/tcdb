@@ -1,5 +1,18 @@
 from django.db import models
 
+class CleverCharacters(models.Model):
+    school = models.TextField(blank=True, null=True)
+    student_id = models.TextField(blank=True, null=True)
+    student_name = models.TextField(blank=True, null=True)
+    grade = models.IntegerField(blank=True, null=True)
+    period = models.TextField(blank=True, null=True)
+    course = models.TextField(blank=True, null=True)
+    cavg = models.TextField(blank=True, null=True)
+    teacher = models.TextField(blank=True, null=True)
+    misconducts = models.TextField(blank=True, null=True)
+    attendance = models.TextField(blank=True, null=True)
+    date_posted = models.DateField()
+
 class Roster(models.Model):
     student_id = student_id = models.IntegerField()
     student = models.TextField(blank=True, null=True)

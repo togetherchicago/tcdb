@@ -5,13 +5,14 @@ from django.shortcuts import render
 
 from library.DataWallLoader import DataWallLoader
 from library.RosterLoader import RosterLoader
+from library.CleverCharactersLoader import CleverCharactersLoader
 
 
 def importer(request):
 
     error = False
     message = None
-    datasetType = 'wr'
+    datasetType = 'cc'
     datasetDate = datetime.today().strftime('%m/%d/%Y')
 
     if request.method == 'POST':
@@ -37,6 +38,8 @@ def importer(request):
                 result = RosterLoader(uploaded_file_url).load(datasetDateObj)
             elif datasetType == 'dw':
                 result = DataWallLoader(uploaded_file_url).load(datasetDateObj)
+            elif datasetType == 'cc':
+                result = CleverCharactersLoader(uploaded_file_url).load(datasetDateObj)
 
             if result.succeeded():
                 error = False
